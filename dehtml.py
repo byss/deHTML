@@ -137,6 +137,10 @@ for ent in entities:
 	i = len (entity)
 	fout.write ('''\
 {ts}// "&{entity}"
+{ts}if (lastCopied < curr - 2) {{
+{ts}	resultEnd = stpncpy (resultEnd, lastCopied, curr - lastCopied - 2);
+{ts}	lastCopied = curr - 2;
+{ts}}}
 {ts}entity = {idx};
 {ts}entityLength = {length};
 {ts}sourceLength = {i};
@@ -197,6 +201,12 @@ fout.write ('''\
 						}
 
 						if (entityValid) {
+							if (parsingHex) {
+								--curr;
+							}
+							if (lastCopied < curr - 2) {
+								resultEnd = stpncpy (resultEnd, lastCopied, curr - lastCopied - 2);
+							}
 							if (entityValue < 0x80) {
 								*resultEnd++ = entityValue & 0x7f;
 							} else {

@@ -20,6 +20,7 @@ static char *tests [][2] = {
 	{"&#10764;", "⨌"},
 	{"&#x1234567890;", "&#x1234567890;"},
 	{"&#12345678901112;", "&#12345678901112;"},
+	{"A &spades; & to demonstrate; an &invalid; sequence; &Some text; &#8364;", "A ♠ & to demonstrate; an &invalid; sequence; &Some text; €"},
 };
 
 int main () {
