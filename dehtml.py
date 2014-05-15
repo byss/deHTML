@@ -58,6 +58,8 @@ except:
 	sys.exit (-2)
 
 fout.write ('''\
+#include "dehtml.h"
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
