@@ -9,4 +9,10 @@ Pod::Spec.new do |spec|
 	spec.source_files        = 'dehtml.{h,c}', 'NSString+deHTML.{h,m}'
 	spec.prepare_command     = 'make dehtml.c'
 	spec.requires_arc        = true
+
+	spec.ios.deployment_target     = '4.0'
+	spec.osx.deployment_target     = '10.6'
+	spec.tvos.deployment_target    = '9.0'
+	spec.watchos.deployment_target = '2.0'
+	spec.frameworks = 'Foundation'
 end
