@@ -27,12 +27,18 @@
 #ifndef KB_DEHTML_H
 #define KB_DEHTML_H 1
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-char *kb_dehtml_utf8_string (char const *const input);
+char *kb_dehtml_utf8_string_with_length (char const *const input, size_t *const result_length);
 
+static __inline__ __attribute__((always_inline)) char *kb_dehtml_utf8_string (char const *const input) {
+	return kb_dehtml_utf8_string_with_length (input, NULL);
+}
+	
 #ifdef __cplusplus
 }
 #endif

@@ -30,7 +30,7 @@ CC=clang -c -Wall
 LD=clang
 PY=python
 
-CFLAGS=-std=c99 -O2
+CFLAGS=-std=c99 -Os
 OBJCFLAGS=-framework Foundation $(CFLAGS)
 OBJCLFLAGS=-framework Foundation
 

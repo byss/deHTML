@@ -108,6 +108,7 @@ int main (void) {
 #if OBJC_TEST_USES_KB_HTML
 			NSString *other = [sourceString deHTML];
 #endif
+			other = nil;
 		}
 
 		char const *const authorName =

@@ -79,7 +79,12 @@ for entity in entities:
 fout.write ('''\
 };
 
-char *kb_dehtml_utf8_string (char const *const input) {
+static __inline__ __attribute__((always_inline)) char *mempcpy (char *const restrict dst, char const *const restrict src, size_t const n) {
+	memcpy (dst, src, n);
+	return (dst + n);
+}
+
+char *kb_dehtml_utf8_string_with_length (char const *const input, size_t *const result_length) {
 	size_t length = strlen (input);
 	char const *curr = input;
 	char const *lastCopied = input;
@@ -90,7 +95,7 @@ char *kb_dehtml_utf8_string (char const *const input) {
 	do {
 		switch (*curr) {
 			case 0:
-				resultEnd = stpncpy (resultEnd, lastCopied, curr - lastCopied);
+				resultEnd = mempcpy (resultEnd, lastCopied, curr - lastCopied);
 				break;
 
 			case '&': {
@@ -140,7 +145,7 @@ for ent in entities:
 	fout.write ('''\
 {ts}// "&{entity}"
 {ts}if (lastCopied < curr - 2) {{
-{ts}	resultEnd = stpncpy (resultEnd, lastCopied, curr - lastCopied - 2);
+{ts}	resultEnd = mempcpy (resultEnd, lastCopied, curr - lastCopied - 2);
 {ts}	lastCopied = curr - 2;
 {ts}}}
 {ts}entity = {idx};
@@ -207,7 +212,7 @@ fout.write ('''\
 								--curr;
 							}
 							if (lastCopied < curr - 2) {
-								resultEnd = stpncpy (resultEnd, lastCopied, curr - lastCopied - 2);
+								resultEnd = mempcpy (resultEnd, lastCopied, curr - lastCopied - 2);
 							}
 							if (entityValue < 0x80) {
 								*resultEnd++ = entityValue & 0x7f;
@@ -243,8 +248,8 @@ fout.write ('''\
 					} break;
 				}
 				if (entityLength) {
-					resultEnd = stpncpy (resultEnd, lastCopied, curr - lastCopied - 1);
-					resultEnd = stpncpy (resultEnd, entities [entity], entityLength);
+					resultEnd = mempcpy (resultEnd, lastCopied, curr - lastCopied - 1);
+					resultEnd = mempcpy (resultEnd, entities [entity], entityLength);
 					lastCopied = (curr += sourceLength);
 				}
 				--curr;
@@ -253,6 +258,10 @@ fout.write ('''\
 	} while (*curr++);
 
 	*resultEnd = 0;
+	if (result_length) {
+		*result_length = (resultEnd - result);
+	}
+	
 	return result;
 }
 ''')
