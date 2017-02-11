@@ -97,7 +97,7 @@ NSString *sourceString = @
 	"&lt;td&gt;&lt;a href=&quot;/wiki/Section_sign&quot; title=&quot;Section sign&quot;&gt;section sign&lt;/a&gt;&lt;/td&gt;"
 	"&lt;/tr&gt;";
 
-#define REPEATS_COUNT (0x8000)
+#define REPEATS_COUNT (0x10000)
 
 int main (void) {
 	@autoreleasepool {

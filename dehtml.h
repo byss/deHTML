@@ -27,13 +27,38 @@
 #ifndef KB_DEHTML_H
 #define KB_DEHTML_H 1
 
-#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+	
+#ifndef unichar
+#	include <stdint.h>
+#	define unichar uint16_t
+#endif
+	
+void kb_dehtml_utf16_string_with_length_noalloc (unichar const *const input, size_t const input_length, unichar *const result, size_t *const result_length);
+	
+static __inline__ __attribute__((always_inline)) unichar *kb_dehtml_utf16_string_with_length (unichar const *const input, size_t const input_length, size_t *const result_length) {
+	if (input_length) {
+		unichar *result = malloc (input_length * sizeof (unichar));
+		kb_dehtml_utf16_string_with_length_noalloc (input, input_length, result, result_length);
+		return result;
+	} else {
+		*result_length = 0;
+		return NULL;
+	}
+}
 
-char *kb_dehtml_utf8_string_with_length (char const *const input, size_t *const result_length);
+void kb_dehtml_utf8_string_with_length_noalloc (char const *const input, char *const result, size_t *const result_length);
+	
+static __inline__ __attribute__((always_inline)) char *kb_dehtml_utf8_string_with_length (char const *const input, size_t *const result_length) {
+	char *result = malloc (strlen (input) + 1);
+	kb_dehtml_utf8_string_with_length_noalloc (input, result, result_length);
+	return result;
+}
 
 static __inline__ __attribute__((always_inline)) char *kb_dehtml_utf8_string (char const *const input) {
 	return kb_dehtml_utf8_string_with_length (input, NULL);

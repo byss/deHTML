@@ -31,15 +31,17 @@
 @implementation NSString (deHTML)
 
 - (NSString *) deHTML {
+	unichar *chars = malloc (self.length * sizeof (unichar));
+	[self getCharacters:chars];
 	size_t resultLen = 0;
-	char *dehtml = kb_dehtml_utf8_string_with_length ([self UTF8String], &resultLen);
-	NSString *result = [[NSString alloc] initWithBytesNoCopy:dehtml length:resultLen encoding:NSUTF8StringEncoding freeWhenDone:YES];
+	kb_dehtml_utf16_string_with_length_noalloc (chars, self.length, chars, &resultLen);
+	NSString *result = [[NSString alloc] initWithCharactersNoCopy:chars length:resultLen freeWhenDone:YES];
 	
 	if (!result) {
 		// From NSString documentation:
 		// If an error occurs during the creation of the string, then bytes is not freed
 		// even if flag is YES. In this case, the caller is responsible for freeing the buffer.
-		free (dehtml);
+		free (chars);
 	}
 	return result;
 }

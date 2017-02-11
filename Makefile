@@ -50,7 +50,7 @@ test: test-binary objc-test-binary-kb objc-test-binary-mw
 	./objc-test-binary-mw
 
 test-binary: dehtml.o test.o
-	$(LD) -o test-binary dehtml.o test.o
+	$(LD) -liconv -o test-binary dehtml.o test.o
 
 test.o: test.c
 	$(CC) $(CFLAGS) -o test.o test.c
