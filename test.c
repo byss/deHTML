@@ -22,7 +22,9 @@ static char const *tests_utf8 [][2] = {
 	{"&#10764;", "⨌"},
 	{"&#x1234567890;", "&#x1234567890;"},
 	{"&#12345678901112;", "&#12345678901112;"},
-	{"A &spades; & to demonstrate; an &invalid; sequence; &Some text; &#8364;", "A ♠ & to demonstrate; an &invalid; sequence; &Some text; €"},
+	{"A &spades; & to demonstrate; an &invalid; sequence; &Some text; &spades &#8364;", "A ♠ & to demonstrate; an &invalid; sequence; &Some text; &spades €"},
+	{"&#x10000;", "𐀀"},
+	{"Extended Unicode: &#x10000;", "Extended Unicode: 𐀀"},
 };
 
 struct utf16_string {
@@ -76,6 +78,16 @@ int main () {
 	return failed;
 }
 
+union _endianness {
+	uint16_t value16;
+	uint8_t value8;
+};
+union _endianness const endianness = { .value16 = 0x0100 };
+static char const *const utf16_encodings [] = {
+	"utf-16le",
+	"utf-16be",
+};
+
 void utf16_string_init (struct utf16_string *const string, char const *const utf8_source) {
 	size_t utf8_source_size = strlen (utf8_source);
 	if (!utf8_source_size) {
@@ -85,7 +97,7 @@ void utf16_string_init (struct utf16_string *const string, char const *const utf
 		return;
 	}
 	
-	iconv_t utf8_utf16_cd = iconv_open ("ucs-2-internal", "utf-8");
+	iconv_t utf8_utf16_cd = iconv_open (utf16_encodings [endianness.value8], "utf-8");
 	
 	char *utf8_source_copy = strdup (utf8_source);
 	char *utf8_source_end = utf8_source_copy;
@@ -116,7 +128,7 @@ int utf16_string_equals (struct utf16_string const *const lhs, struct utf16_stri
 }
 
 char *utf16_string_get_utf8 (struct utf16_string const *const string) {
-	iconv_t utf16_utf18_cd = iconv_open ("utf-8", "ucs-2-internal");
+	iconv_t utf16_utf18_cd = iconv_open ("utf-8", utf16_encodings [endianness.value8]);
 	
 	char *string_end = (char *) string->chars;
 	size_t string_size = string->length * sizeof (unichar);

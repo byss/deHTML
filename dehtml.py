@@ -302,7 +302,7 @@ fout.write ('''\
 							if (entityValue < 0x10000) {
 								*resultEnd++ = entityValue;
 							} else {
-								entityValue >>= 16;
+								entityValue = (entityValue >> 16) - 1;
 								*resultEnd++ = ((entityValue & 0xffc00) >> 10) + 0xd800;
 								*resultEnd++ = (entityValue & 0x1ff) + 0xdc00;
 							}

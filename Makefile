@@ -31,7 +31,7 @@ LD=clang
 PY=python
 
 CFLAGS=-std=c99 -Os
-OBJCFLAGS=-framework Foundation $(CFLAGS)
+OBJCFLAGS=-fobjc-arc $(CFLAGS)
 OBJCLFLAGS=-framework Foundation
 
 all: dehtml.o
@@ -45,8 +45,8 @@ dehtml.c: dehtml.py
 	$(PY) dehtml.py
 
 test: test-binary objc-test-binary-kb objc-test-binary-mw
-	./test-binary
-	./objc-test-binary-kb
+	./test-binary && \
+	./objc-test-binary-kb && \
 	./objc-test-binary-mw
 
 test-binary: dehtml.o test.o
@@ -74,10 +74,10 @@ objc-test-mw.o: test.m
 	$(CC) $(OBJCFLAGS) -DOBJC_TEST_USES_MW_HTML=1 -o objc-test-mw.o test.m
 
 3rdParty/GTMNSString+HTML.o: 3rdParty/GTMNSString+HTML.m
-	$(CC) $(OBJCFLAGS) -o 3rdParty/GTMNSString+HTML.o 3rdParty/GTMNSString+HTML.m
+	$(CC) $(OBJCFLAGS) -fno-objc-arc -o 3rdParty/GTMNSString+HTML.o 3rdParty/GTMNSString+HTML.m
 
 3rdParty/NSString+HTML.o: 3rdParty/NSString+HTML.m
-	$(CC) $(OBJCFLAGS) -o 3rdParty/NSString+HTML.o 3rdParty/NSString+HTML.m
+	$(CC) $(OBJCFLAGS) -fno-objc-arc -o 3rdParty/NSString+HTML.o 3rdParty/NSString+HTML.m
 
 clean:
 	rm -f *.o 3rdParty/*.o dehtml.c test-binary objc-test-binary-*
