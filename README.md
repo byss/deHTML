@@ -18,15 +18,15 @@ Benchmark
 	</tr>
 	<tr>
 		<td>Kirill Bystrov's (this)</td>
-		<td>2.315 sec</td>
-		<td>0.215 sec</td>
-		<td>300132 kB</td>
+		<td>1.271 sec</td>
+		<td>0.15 sec</td>
+		<td>5128 kB</td>
 	</tr>
 	<tr>
 		<td>Michael Waterfall's</td>
-		<td>17.701 sec</td>
-		<td>1.29 sec</td>
-		<td>1198352 kB</td>
+		<td>29.730 sec</td>
+		<td>0.620 sec</td>
+		<td>758000 kB</td>
 	</tr>
 </table>
 
