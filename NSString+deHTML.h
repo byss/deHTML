@@ -28,6 +28,6 @@
 
 @interface NSString (deHTML)
 
-- (NSString *) deHTML;
+- (NSString *_Nonnull) deHTML;
 
 @end

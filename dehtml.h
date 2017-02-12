@@ -29,21 +29,19 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 	
-#ifndef unichar
-#	include <stdint.h>
-#	define unichar uint16_t
-#endif
+typedef uint16_t kb_unichar;
 	
-void kb_dehtml_utf16_string_with_length_noalloc (unichar const *const input, size_t const input_length, unichar *const result, size_t *const result_length);
+void kb_dehtml_utf16_string_with_length_noalloc (kb_unichar const *const input, size_t const input_length, kb_unichar *const result, size_t *const result_length);
 	
-static __inline__ __attribute__((always_inline)) unichar *kb_dehtml_utf16_string_with_length (unichar const *const input, size_t const input_length, size_t *const result_length) {
+static __inline__ __attribute__((always_inline)) kb_unichar *kb_dehtml_utf16_string_with_length (kb_unichar const *const input, size_t const input_length, size_t *const result_length) {
 	if (input_length) {
-		unichar *result = malloc (input_length * sizeof (unichar));
+		kb_unichar *result = malloc (input_length * sizeof (kb_unichar));
 		kb_dehtml_utf16_string_with_length_noalloc (input, input_length, result, result_length);
 		return result;
 	} else {

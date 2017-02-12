@@ -76,7 +76,7 @@ fout.write ('''\
 struct EncodedEntity {{
 	char utf8 [{maxUTF8}];
 	size_t utf8_size;
-	unichar utf16 [{maxUTF16}];
+	kb_unichar utf16 [{maxUTF16}];
 	size_t utf16_size;
 }};
 '''.format (maxUTF8 = maxUTF8, maxUTF16 = maxUTF16))
@@ -105,8 +105,8 @@ static __inline__ __attribute__((always_inline)) char *mempcpy_utf8 (char *const
 	return (dst + n);
 }
 
-static __inline__ __attribute__((always_inline)) unichar *mempcpy_utf16 (unichar *const restrict dst, unichar const *const restrict src, size_t const n) {
-	memcpy (dst, src, n * sizeof (unichar));
+static __inline__ __attribute__((always_inline)) kb_unichar *mempcpy_utf16 (kb_unichar *const restrict dst, kb_unichar const *const restrict src, size_t const n) {
+	memcpy (dst, src, n * sizeof (kb_unichar));
 	return (dst + n);
 }
 
@@ -133,7 +133,7 @@ void kb_dehtml_utf8_string_with_length_noalloc (char const *const input, char *c
 #	define kb_size utf8_size
 #	define mempcpy mempcpy_utf8
 #else
-void kb_dehtml_utf16_string_with_length_noalloc (unichar const *const input, size_t const length, unichar *const result, size_t *const result_length) {
+void kb_dehtml_utf16_string_with_length_noalloc (kb_unichar const *const input, size_t const length, kb_unichar *const result, size_t *const result_length) {
 #	ifdef kb_char
 #		undef kb_char
 #	endif
@@ -150,7 +150,7 @@ void kb_dehtml_utf16_string_with_length_noalloc (unichar const *const input, siz
 #		undef mempcpy
 #	endif
 
-#	define kb_char unichar
+#	define kb_char kb_unichar
 #	define kb_zero_terminated 0
 #	define kb_encoding utf16
 #	define kb_size utf16_size

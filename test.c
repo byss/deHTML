@@ -28,7 +28,7 @@ static char const *tests_utf8 [][2] = {
 };
 
 struct utf16_string {
-	unichar *chars;
+	kb_unichar *chars;
 	size_t length;
 	size_t allocated;
 };
@@ -102,7 +102,7 @@ void utf16_string_init (struct utf16_string *const string, char const *const utf
 	char *utf8_source_copy = strdup (utf8_source);
 	char *utf8_source_end = utf8_source_copy;
 	
-	string->allocated = utf8_source_size * sizeof (unichar);
+	string->allocated = utf8_source_size * sizeof (kb_unichar);
 	string->chars = malloc (string->allocated);
 	char *result_end = (char *) string->chars;
 	size_t result_size = string->allocated;
@@ -113,7 +113,7 @@ void utf16_string_init (struct utf16_string *const string, char const *const utf
 			abort ();
 		}
 	}
-	string->length = ((unichar *) result_end) - string->chars;
+	string->length = ((kb_unichar *) result_end) - string->chars;
 	
 	free (utf8_source_copy);
 	iconv_close (utf8_utf16_cd);
@@ -124,14 +124,14 @@ int utf16_string_equals (struct utf16_string const *const lhs, struct utf16_stri
 		return 0;
 	}
 	
-	return !memcmp (lhs->chars, rhs->chars, lhs->length * sizeof (unichar));
+	return !memcmp (lhs->chars, rhs->chars, lhs->length * sizeof (kb_unichar));
 }
 
 char *utf16_string_get_utf8 (struct utf16_string const *const string) {
 	iconv_t utf16_utf18_cd = iconv_open ("utf-8", utf16_encodings [endianness.value8]);
 	
 	char *string_end = (char *) string->chars;
-	size_t string_size = string->length * sizeof (unichar);
+	size_t string_size = string->length * sizeof (kb_unichar);
 	size_t result_size = string_size * 3 / 2 + 1;
 	char *result = malloc (result_size);
 	char *result_end = result;
