@@ -55,14 +55,11 @@ test-binary: dehtml.o test.o
 test.o: test.c
 	$(CC) $(CFLAGS) -o test.o test.c
 
-objc-test-binary: dehtml.o NSString+deHTML.o objc-test.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
-	$(LD) $(OBJCLFLAGS) -o objc-test-binary dehtml.o NSString+deHTML.o objc-test.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
+objc-test-binary-mw: objc-test-mw.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
+	$(LD) $(OBJCLFLAGS) -o objc-test-binary-mw objc-test-mw.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
 
-objc-test-binary-mw: dehtml.o NSString+deHTML.o objc-test-mw.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
-	$(LD) $(OBJCLFLAGS) -o objc-test-binary-mw dehtml.o NSString+deHTML.o objc-test-mw.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
-
-objc-test-binary-kb: dehtml.o NSString+deHTML.o objc-test-kb.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
-	$(LD) $(OBJCLFLAGS) -o objc-test-binary-kb dehtml.o NSString+deHTML.o objc-test-kb.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
+objc-test-binary-kb: objc-test-kb.o dehtml.o NSString+deHTML.o
+	$(LD) $(OBJCLFLAGS) -o objc-test-binary-kb objc-test-kb.o dehtml.o NSString+deHTML.o
 
 NSString+deHTML.o: NSString+deHTML.m NSString+deHTML.h
 	$(CC) $(OBJCFLAGS) -o NSString+deHTML.o NSString+deHTML.m
