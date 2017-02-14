@@ -68,6 +68,7 @@ int main () {
 		} else {
 			char *result_utf8 = utf16_string_get_utf8 (&result_utf16);
 			printf ("failed (got %s)\n", result_utf8);
+			failed = 1;
 			free (result_utf8);
 		}
 		
