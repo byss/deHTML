@@ -19,7 +19,7 @@ Benchmark
 	<tr>
 		<td>Kirill Bystrov's (this)</td>
 		<td>1.271 sec</td>
-		<td>0.15 sec</td>
+		<td>0.8 sec</td>
 		<td>5128 kB</td>
 	</tr>
 	<tr>
