@@ -26,8 +26,17 @@
 # THE SOFTWARE.
 #
 
+from __future__ import print_function
 import sys
-import htmlentitydefs
+PY3 = (sys.version_info.major > 2)
+
+if PY3:
+	import html.entities as htmlentitydefs
+	unichr = chr
+	ord = lambda x: x
+	xrange = range
+else:
+	import htmlentitydefs
 
 OUTPUT = 'dehtml.c'
 
@@ -41,6 +50,10 @@ def utf8Len (entity):
 
 def utf16Len (entity):
 	return len (unichr (htmlentitydefs.name2codepoint [entity]).encode ('utf-16-le')) / 2
+	
+if PY3:
+	_orig_utf16Len = utf16Len
+	utf16Len = lambda e: int (_orig_utf16Len (e))
 
 maxUTF8 = 0
 maxUTF16 = 0
@@ -54,7 +67,7 @@ for e in htmlentitydefs.name2codepoint:
 		maxUTF16 = dst16
 
 	if (dst8 > src) or (dst16 > src):
-		print 'Sorry, you proved my program wrong =('
+		print ('Sorry, you proved my program wrong' + (' (and are also mocking me with your cool new Py3)' if PY3 else ''), '=(')
 		sys.exit (-1)
 		
 maxBytes8Length = 6 * maxUTF8 - 2
