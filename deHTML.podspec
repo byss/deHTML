@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
 	spec.name                = 'deHTML'
-	spec.version             = '0.5.1'
+	spec.version             = '0.5.2'
 	spec.license             = { :type => 'MIT' }
 	spec.homepage            = "https://github.com/byss/#{spec.name}"
 	spec.authors             = { 'Kirill byss Bystrov' => 'kirrbyss@gmail.com' }
