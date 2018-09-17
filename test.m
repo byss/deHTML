@@ -98,37 +98,40 @@ NSString *sourceString = @
 	"&lt;/tr&gt;";
 
 #define REPEATS_COUNT (0x18000)
+#define RU_FMT "%ld.%d sec"
+#define RU_ARGS(_ru_st) (_ru_st).tv_sec, (_ru_st).tv_usec / 1000
 
-int main (void) {
+int main (int argc, char const *argv []) {
 	@autoreleasepool {
 		for (NSUInteger i = 0; i < REPEATS_COUNT; i++) {
-#if OBJC_TEST_USES_MW_HTML
+#if TEST_MW_TFM
 			NSString *other = [sourceString stringByDecodingHTMLEntities];
 #endif
-#if OBJC_TEST_USES_KB_HTML
+#if TEST_KB_TFM
 			NSString *other = [sourceString deHTML];
 #endif
 			other = nil;
 		}
 
 		char const *const authorName =
-#if OBJC_TEST_USES_MW_HTML
-			"Michael Waterfall"
+#if TEST_MW_TFM
+			"Michael Waterfall's"
 #endif
-#if OBJC_TEST_USES_KB_HTML
-			"Kirill Bystrov"
+#if TEST_KB_TFM
+			"Kirill Bystrov's (this)"
 #endif
 			"";
 
-		printf ("%s's resources usage:\n", authorName);
 		struct rusage usage;
 		if (getrusage (RUSAGE_SELF, &usage) < 0) {
 			perror ("Cannot get system usage");
 			return 0;
 		}
 
-		printf ("  User time:     %ld.%d sec\n", usage.ru_utime.tv_sec, usage.ru_utime.tv_usec / 1000);
-		printf ("  System time:   %ld.%d sec\n", usage.ru_stime.tv_sec, usage.ru_stime.tv_usec / 1000);
+		printf ("%s imlpementation resources usage:\n", authorName);
+
+		printf ("  User time:     " RU_FMT "\n", RU_ARGS (usage.ru_utime));
+		printf ("  System time:   " RU_FMT "\n", RU_ARGS (usage.ru_stime));
 		printf ("  Peak RSS size: %ld kB\n",     usage.ru_maxrss / 1024);
 
 		return 0;

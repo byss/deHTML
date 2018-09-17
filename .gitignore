@@ -1,5 +1,4 @@
 .DS_Store
-test-binary
-objc-test-binary-*
+test-binary-*
 *.o
 dehtml.c

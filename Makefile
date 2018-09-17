@@ -26,55 +26,56 @@
 
 # This Makefile is not masterpiece but it works.
 
-CC=clang -c -Wall
-LD=clang
-PY=python
+CFLAGS = -c -Wall -std=c99 -Os
+OBJCLDFLAGS = -framework Foundation
 
-CFLAGS=-std=c99 -Os
-OBJCFLAGS=-fobjc-arc $(CFLAGS)
-OBJCLFLAGS=-framework Foundation
+CC = clang $(CFLAGS)
+LD = clang
+MERGEOBJS = ld -r
+PY = python
+
+ALL_BENCHMARKS = KB MW
+ALL_TESTS = basic $(ALL_BENCHMARKS:%=benchmark-%)
 
 all: dehtml.o
 
 prepare: dehtml.c
 
-dehtml.o: dehtml.h dehtml.c
-	$(CC) $(CFLAGS) -o dehtml.o dehtml.c
+dehtml.o: dehtml.c dehtml.h
+	$(CC) $(CFLAGS) -o $@ $<
 
 dehtml.c: dehtml.py
-	$(PY) dehtml.py
+	$(PY) $<
 
-test: test-binary objc-test-binary-kb objc-test-binary-mw
-	./test-binary && \
-	./objc-test-binary-kb && \
-	./objc-test-binary-mw
+test: $(ALL_TESTS:%=test-binary-%)
+	$(foreach testBinary,$^,./$(testBinary);)
 
-test-binary: dehtml.o test.o
-	$(LD) -liconv -o test-binary dehtml.o test.o
+
+test-binary-basic: dehtml.o test.o
+	$(LD) -liconv -o $@ $^
 
 test.o: test.c
-	$(CC) $(CFLAGS) -o test.o test.c
+	$(CC) -o $@ $^
 
-objc-test-binary-mw: objc-test-mw.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
-	$(LD) $(OBJCLFLAGS) -o objc-test-binary-mw objc-test-mw.o 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
 
-objc-test-binary-kb: objc-test-kb.o dehtml.o NSString+deHTML.o
-	$(LD) $(OBJCLFLAGS) -o objc-test-binary-kb objc-test-kb.o dehtml.o NSString+deHTML.o
+test-binary-benchmark-%: test-objc_%.o test-objc-deps_%.o
+	$(LD) $(OBJCLDFLAGS) -o $@ $^
+
+test-objc_%.o: test.m
+	$(CC) -fobjc-arc -DTEST_$*_TFM=1 -o $@ $^
+
+test-objc-deps_KB.o: dehtml.o NSString+deHTML.o
+	$(MERGEOBJS) -o $@ $^
+
+test-objc-deps_MW.o: 3rdParty/GTMNSString+HTML.o 3rdParty/NSString+HTML.o
+	$(MERGEOBJS) -o $@ $^
+
 
 NSString+deHTML.o: NSString+deHTML.m NSString+deHTML.h
-	$(CC) $(OBJCFLAGS) -o NSString+deHTML.o NSString+deHTML.m
+	$(CC) -fobjc-arc -o $@ $<
 
-objc-test-kb.o: test.m
-	$(CC) $(OBJCFLAGS) -DOBJC_TEST_USES_KB_HTML=1 -o objc-test-kb.o test.m
-
-objc-test-mw.o: test.m
-	$(CC) $(OBJCFLAGS) -DOBJC_TEST_USES_MW_HTML=1 -o objc-test-mw.o test.m
-
-3rdParty/GTMNSString+HTML.o: 3rdParty/GTMNSString+HTML.m
-	$(CC) $(OBJCFLAGS) -fno-objc-arc -o 3rdParty/GTMNSString+HTML.o 3rdParty/GTMNSString+HTML.m
-
-3rdParty/NSString+HTML.o: 3rdParty/NSString+HTML.m
-	$(CC) $(OBJCFLAGS) -fno-objc-arc -o 3rdParty/NSString+HTML.o 3rdParty/NSString+HTML.m
+3rdParty/%.o: 3rdParty/%.m
+	$(CC) -o $@ $<
 
 clean:
-	rm -f *.o 3rdParty/*.o dehtml.c test-binary objc-test-binary-*
+	rm -f *.o 3rdParty/*.o dehtml.c test-binary-*
