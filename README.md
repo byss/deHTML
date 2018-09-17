@@ -9,26 +9,10 @@ comparison with a well-known [MWFeedParser's HTML entities parser](https://githu
 Benchmark
 =========
 
-<table>
-	<tr>
-		<th>Implementation</th>
-		<th>User time</th>
-		<th>System time</th>
-		<th>Peak RSS size (aka RAM consumption)</th>
-	</tr>
-	<tr>
-		<td>Kirill Bystrov's (this)</td>
-		<td>1.271 sec</td>
-		<td>0.8 sec</td>
-		<td>5128 kB</td>
-	</tr>
-	<tr>
-		<td>Michael Waterfall's</td>
-		<td>29.730 sec</td>
-		<td>0.620 sec</td>
-		<td>758000 kB</td>
-	</tr>
-</table>
+Implementation | User time | System time | Peak RSS size (aka RAM consumption)
+---------------|-----------|-------------|------------------------------------
+Kirill Bystrov's (this) | 1.117 sec | 0.222 sec | 751444 kB
+Michael Waterfall's | 20.138 sec | 0.604 sec | 1256740 kB
 
 License
 =======

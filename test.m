@@ -128,6 +128,13 @@ int main (int argc, char const *argv []) {
 			return 0;
 		}
 
+		for (int i = 1; i < argc; i++) {
+			if (!strcmp (argv [i], "-q")) {
+				printf ("%s | " RU_FMT " | " RU_FMT " | %ld kB\n", authorName, RU_ARGS (usage.ru_utime), RU_ARGS (usage.ru_stime), usage.ru_maxrss / 1024);
+				return 0;
+			}
+		}
+
 		printf ("%s imlpementation resources usage:\n", authorName);
 
 		printf ("  User time:     " RU_FMT "\n", RU_ARGS (usage.ru_utime));

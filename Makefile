@@ -50,6 +50,10 @@ dehtml.c: dehtml.py
 test: $(ALL_TESTS:%=test-binary-%)
 	$(foreach testBinary,$^,./$(testBinary);)
 
+benchmark-summary: $(ALL_BENCHMARKS:%=test-binary-benchmark-%)
+	@echo "Implementation | User time | System time | Peak RSS size (aka RAM consumption)"
+	@echo "---------------|-----------|-------------|------------------------------------"
+	@ $(foreach testBinary,$^,./$(testBinary) -q ;)
 
 test-binary-basic: dehtml.o test.o
 	$(LD) -liconv -o $@ $^
